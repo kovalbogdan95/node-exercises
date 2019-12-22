@@ -9,16 +9,27 @@ app.use(urlencoded({extended: true}))
 app.use(json())
 
 app.get('/user/:id', async (req, res) => {
-  const id = req.id
-  // should ge user by given id in route param
-  const user = await users.findUser(user => user.id === id)
-  res.status(200).send(user)
+  const id = parseInt(req.params.id)
+  // should get user by given id in route param
+  try {
+    const user = await users.findUser(id)
+    res.status(200).send(user)
+  }
+  catch(error) {
+    console.log(error.message)
+    res.status(400).send({'error': error.message})
+  }
 })
 
 app.delete('/user/:id', async (req, res) => {
-  const id = req.id
-  await users.deleteUser(id)
-  res.status(201).send({id})
+  try {
+    const id = parseInt(req.params.id)
+    await users.deleteUser(id)
+    res.status(201).send({id})
+  }
+  catch(error) {
+    res.status(400).send({'error': error.message})
+  }
 })
 
 module.exports = app

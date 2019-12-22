@@ -5,14 +5,15 @@
   "author": "Scott Moss <willscottmoss@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "nodemon": "^2.0.2"
   },
   "scripts": {
     "test": "jest"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "mime": "^2.3.1",
     "mime-types": "^2.1.25",
     "morgan": "^1.9.1"
