@@ -2,62 +2,50 @@ const http = require('http')
 const url = require('url')
 const fs = require('fs')
 const path = require('path')
-const mime = require('mime')
+var mime = require('mime-types')
+
 
 /**
- * async function that reads asset from disk
+ * this function is blocking, fix that
  * @param {String} name full file name of asset in asset folder
  */
-const findAsset = (name) => {
-  return new Promise((resolve, reject) => {
-    const assetPath = path.join(__dirname, 'assets', name)
-    fs.readFile(assetPath, {encoding: 'utf-8'}, (err, asset) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(asset)
-      }
-    })
-  })
-}
 
 const hostname = '127.0.0.1'
 const port = 3000
-// simple, quick router object
-const router = {
-  '/ GET': {
-    asset: 'index.html',
-    type: mime.getType('html')
-  },
-  '/style.css GET': {
-    asset: 'style.css',
-    type: mime.getType('css')
-  }
+const index_file = 'index.html'
+const file_not_found = '404.html'
+
+const getMimetype = (file_name) => {
+  return {'Content-Type': mime.lookup(file_name)}
+}
+
+const returnFile = (res, file_name, status) => {
+  res.writeHead(status, getMimetype(file_name))
+  res.write(fs.readFileSync(file_name, {encoding: 'utf-8'}).toString())
+  res.end()
 }
 
 // log incoming request coming into the server. Helpful for debugging and tracking
 const logRequest = (method, route, status) => console.log(method, route, status)
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer((req, res) => {
   const method = req.method
   const route = url.parse(req.url).pathname
-  // check the router for the incomming route + method pair
-  const routeMatch = router[`${route} ${method}`]
-  // return not found if the router does not have a match
-  if (!routeMatch) {
-    res.writeHead(404)
-    logRequest(method, route, 404)
-    return res.end()
+  let file_name = route
+  // this is sloppy, especially with more assets, create a "router"
+  if (route === '/') {
+    file_name = index_file
   }
-
-  const {type, asset} = routeMatch
-
-  // set the content-type header for the asset so applications like a browser will know how to handle it
-  res.writeHead(200,{'Content-Type': type})
+  let assetPath = path.join(__dirname, 'assets', file_name)
+  if (fs.existsSync(assetPath)) {
+    returnFile(res, assetPath, 200)
+    logRequest(method, route, 200)
+  }
+  else {
+    returnFile(res, path.join(__dirname, 'assets', file_not_found), 404)
+    logRequest(method, route, 404)
+  }
   // most important part, send down the asset
-  res.write(await findAsset(asset))
-  logRequest(method, route, 200)
-  res.end()
 })
 
 server.listen(port, hostname, () => {

@@ -1,29 +1,43 @@
-const { findUser, deleteUser, fixId } = require('./users')
+const supertest = require('supertest')
+const users = require('./users')
+const app = require('./api')
+
+const request = supertest(app)
+
 // write some tests
 describe('users', () => {
-  describe('fixId', () => {
-    test('convert param id to db id', () => {
-      expect(fixId('200')).toBe(200)
-    })
+  test('Find user', async () => {
+    let user = await users.findUser(0)
+    expect(typeof(user)).toBe(typeof({}))
+    expect(user.id).toBe(0);
   })
-  describe('findUser', () => {
-    test('finds user by id if user is there', async () => {
-      const user = await findUser(1)
-      expect(user.id).toBe(1)
-    })
+  test('Delete user', async () => {
+    let id = await users.deleteUser(0)
+    expect(typeof(id)).toBe(typeof({}))
+    expect(id.id).toBe(0)
   })
-  describe('deletUser', () => {
-    test('deletes user with id if user is there', async () => {
-      expect.assertions(2)
+})
 
-      const user = await findUser(1)
-      const deletedUser = await deleteUser(user.id)
-      expect(deletedUser.id).toBe(1)
-      try {
-        await findUser(1)
-      } catch(e) {
-        expect(e).toBeTruthy()
-      }
+describe('api', () => {
+    test('get user', async done => {
+        const res = await request.get('/user/1')
+        expect(res.statusCode).toEqual(200)
+        expect(res.body).toHaveProperty('id')
+        expect(res.body.id).toBe(1)
+        done()
     })
-  })
+    test('delete user', async done => {
+        const res = await request.delete('/user/1')
+        expect(res.statusCode).toEqual(201)
+        expect(res.body).toHaveProperty('id')
+        expect(res.body.id).toBe(1)
+        done()
+    })
+    test('not found', async done => {
+        const res = await request.get('/user/100')
+        expect(res.statusCode).toEqual(400)
+        expect(res.body).toHaveProperty('error')
+        expect(res.body.error).toBe("No user with id '100'")
+        done()
+    })
 })
