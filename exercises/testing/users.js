@@ -6,7 +6,6 @@ let users = new Array(20).fill(0)
     email: `readycoder${i}@gmail.com`
   }
 })
-console.log(users)
 
 // simulate async db call with promise
 const findUser = (id) => new Promise((resolve, reject) => {
@@ -26,7 +25,6 @@ const deleteUser = (id) => new Promise((resolve, reject) => {
   }
 
   users.splice(i, 1)
-  console.log(users)
   resolve({id})
 })
 
