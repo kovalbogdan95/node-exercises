@@ -37,10 +37,10 @@ Important: After installing node, please run `npm install i` or `npm install` to
   * test - `npx jest`
 
 This exercise will have you convert some JavaScript written for the browser, so that it works with node.
-- [ ] checkout to start branch
-- [ ] check the README on how to run test (will talk later about that command)
-- [ ] fix and convert the 3 js files in the exercises/modules/browser to Nodejs JavaScript and place them in exercises/modules/node
-- [ ] ensure all tests pass by running test command again
+- [x] checkout to start branch
+- [x] check the README on how to run test (will talk later about that command)
+- [x] fix and convert the 3 js files in the exercises/modules/browser to Nodejs JavaScript and place them in exercises/modules/node
+- [x] ensure all tests pass by running test command again
 ### CLI (npm)
 * location - `exercises/cli`
 * commands
@@ -82,5 +82,5 @@ Deploy one of the exercises to heroku (server) or npm (cli)
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTgxMDQ2MjczOF19
+eyJoaXN0b3J5IjpbMTU5MDc0NDYzOCwtODEwNDYyNzM4XX0=
 -->
