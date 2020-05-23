@@ -81,3 +81,6 @@ You have to debug and track down some issues in a small app. Use your logging an
 Deploy one of the exercises to heroku (server) or npm (cli)
 
 
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTgxMDQ2MjczOF19
+-->
